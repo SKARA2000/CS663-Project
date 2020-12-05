@@ -2,10 +2,13 @@
 clear all;
 tic;
 %% Function LinearSubspace Method
-%function [accuracy] = LinearSubspace(path)
-    path = "../Yale_Database"; 
-    m = 195;
-    n = 231;
+%function [accuracy] = LinearSubspace(path,m,n)
+    path = "../yaleExpCropped";% Cropped face
+    m = 50;
+    n=52;
+    %path = "../Yale_Database"; % Full face
+    %m = 195;
+    %n = 231;
     num_persons = 15;
     img_per_person = 11;
     N = 15*11;
