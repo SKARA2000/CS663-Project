@@ -59,3 +59,21 @@ fprintf('\n');
 fprintf("Accuracy on full faces using correlation for leftlight= %0.3f %%",accuracy(7)*100);
 fprintf('\n');
 toc;
+%% Linear Subspaces method Accuracy using full faces on Yale Database
+tic;
+[accuracy] = Linear_Subspace_Method(path,m,n,num_persons,img_per_person);
+disp("Accuracy with full Faces is " +accuracy +"%");
+toc;
+%% Linear Subspaces method accuracy using cropped faces on Yale database
+tic;
+[accuracy] = Linear_Subspace_Method(path_crop,m_crop,n_crop,num_persons,img_per_person);
+disp("Accuracy with cropped Faces is " +accuracy +"%");
+toc;
+%% Linear Subspaces method accuracy after extrapolating onto different illumination directions
+tic;
+[accuracy] = Linear_Subspace_Exp2_2(path,m,n,num_persons,img_per_person);
+disp("Accuracy when centerlight is removed from Training set =" + accuracy(1));
+disp("Accuracy when leftlight is removed from Training set =" + accuracy(4));
+disp("Accuracy when rightlight is removed from Training set =" + accuracy(7));
+toc;
+
