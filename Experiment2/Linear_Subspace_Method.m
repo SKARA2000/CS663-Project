@@ -3,12 +3,12 @@ clear all;
 tic;
 %% Function LinearSubspace Method
 %function [accuracy] = LinearSubspace(path,m,n)
-    path = "../yaleExpCropped";% Cropped face
-    m = 50;
-    n=52;
-    %path = "../Yale_Database"; % Full face
-    %m = 195;
-    %n = 231;
+    %path = "../yaleExpCropped";% Cropped face
+    %m = 50;
+    %n=52;
+    path = "../Yale_Database"; % Full face
+    m = 195;
+    n = 231;
     num_persons = 15;
     img_per_person = 11;
     N = 15*11;
@@ -17,6 +17,7 @@ tic;
     for i = 1:1:num_persons
         for j = 1:1:img_per_person
             Eigen_Vec_3 = zeros([m*n,3,num_persons]);
+            Mean_Vec = zeros([m*n,num_persons]);
             for k = 1:1:num_persons
                 if i == k
                     X_train = zeros([m*n,img_per_person-1]);
@@ -28,6 +29,9 @@ tic;
                             X_train(:,count) = im2double(reshape(imread(path +"/" +images(((k-1)*img_per_person) + l + 2).name),[m*n,1]));
                         end
                     end
+                    %mean = sum(X_train,2)/(img_per_person-1);
+                    %X_train = X_train - mean;
+                    %Mean_Vec(:,k) = mean;
                     L = X_train'*X_train/(img_per_person-2);
                     [U, S, ~] = svd(L);
                     V = X_train*U;
@@ -39,6 +43,9 @@ tic;
                     for l = 1:1:img_per_person
                         X_train(:,l) = im2double(reshape(imread(path +"/" +images(((k-1)*img_per_person) + l + 2).name),[m*n,1]));
                     end
+                    %mean = sum(X_train,2)/img_per_person;
+                    %X_train = X_train - mean;
+                    %Mean_Vec(:,k) = mean;
                     L = X_train'*X_train/(img_per_person-1);
                     [U, S, ~] = svd(L);
                     V = X_train*U;
@@ -50,9 +57,10 @@ tic;
             TestImg = im2double(reshape(imread(path +"/" +images(((i-1)*img_per_person) + j + 2).name),[m*n,1]));
             distance = zeros([num_persons,1]);
             for k = 1:1:num_persons
-                Test_Coeff = Eigen_Vec_3(:,:,k)'*TestImg;
+                X_test = TestImg - Mean_Vec(:,k);
+                Test_Coeff = Eigen_Vec_3(:,:,k)'*X_test;
                 Reconstruction = Eigen_Vec_3(:,:,k)*Test_Coeff;
-                distance(k) = sum((TestImg - Reconstruction).^2);                
+                distance(k) = sum((X_test - Reconstruction).^2);                
             end
             [~, indx] = min(distance);
             if indx == i
