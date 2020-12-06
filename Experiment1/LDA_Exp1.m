@@ -48,7 +48,26 @@ function [accuracy] = LDA_Exp1(set1, set2, set3, set4, set5, setcounter, n, num_
     ort = ort(:, ind);
     X_final = ort(:, 1:m)' * X_red; % I dunno if X_red or X_cen
     
-    
+    for i = 1:1:num_person
+        for j = 1:1:setcounter(4,i)
+            img = set4(:,j,i);
+            img = img - mu_pca;
+            img_red = basis' * img;
+            img_final = ort(:, 1:m)' * img_red;
+            total1(3) = total1(3) + 1;
+            d = inf;
+            ind = -1;
+            for k = 1:1:N
+                if d > sum((img_final - X_final(:, k)).^2)
+                    d =  sum((img_final - X_final(:, k)).^2);
+                    ind = k;
+                end
+            end
+            if Y(ind) == i 
+                accuracy(3) = accuracy(3) + 1;
+            end
+        end
+    end
     for i = 1:1:num_person
         for j = 1:1:setcounter(2,i)
             img = set2(:,j,i);
@@ -86,26 +105,6 @@ function [accuracy] = LDA_Exp1(set1, set2, set3, set4, set5, setcounter, n, num_
             end
             if Y(ind) == i 
                 accuracy(2) = accuracy(2) + 1;
-            end
-        end
-    end
-    for i = 1:1:num_person
-        for j = 1:1:setcounter(4,i)
-            img = set4(:,j,i);
-            img = img - mu_pca;
-            img_red = basis' * img;
-            img_final = ort(:, 1:m)' * img_red;
-            total1(3) = total1(3) + 1;
-            d = inf;
-            ind = -1;
-            for k = 1:1:N
-                if d > sum((img_final - X_final(:, k)).^2)
-                    d =  sum((img_final - X_final(:, k)).^2);
-                    ind = k;
-                end
-            end
-            if Y(ind) == i 
-                accuracy(3) = accuracy(3) + 1;
             end
         end
     end

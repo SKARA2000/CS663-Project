@@ -5,6 +5,7 @@ function [accuracy] = LDA_Exp1_2(set1, set2, set3, set4, set5, setcounter, n, nu
     m = num_person - 1;
     count = 1;
     N = sum(setcounter(1,:)) + sum(setcounter(5,:));
+    %N = sum(setcounter(5,:));
     X = zeros(n, N);
     Y = zeros(1, N);
     % dimensionality reduction using PCA 
@@ -14,15 +15,12 @@ function [accuracy] = LDA_Exp1_2(set1, set2, set3, set4, set5, setcounter, n, nu
             Y(1, count) = i;
             count = count + 1;
         end
-    end
-    for i = 1:1:c
         for j = 1:1:setcounter(5,i)
             X(:, count) = set5(:,j,i);
             Y(1, count) = i;
             count = count + 1;
         end
     end
-
     mu_pca = mean(X, 2);
     X = X - mu_pca;
     mat = X' * X;
@@ -38,16 +36,10 @@ function [accuracy] = LDA_Exp1_2(set1, set2, set3, set4, set5, setcounter, n, nu
     X_cen = zeros(size(X_red));
     total = 0;
     for i = 1:1:c
-        ind = [(1+total):(total+setcounter(1,i))];
-        mu_i(:,i) = sum(X_red(:, ind), 2)/(setcounter(1,i));
+        ind = [(1+total):(total+setcounter(1,i)+setcounter(5,i))];
+        mu_i(:,i) = mean(X_red(:, ind), 2);
         X_cen(:, ind) = X_red(:, ind) - mu_i(:,i);
-        total = total + setcounter(1,i);
-    end
-    for i = 1:1:c
-        ind = [(1+total):(total+setcounter(5,i))];
-        mu_i(:,i) = sum(X_red(:, ind), 2)/(setcounter(5,i));
-        X_cen(:, ind) = X_red(:, ind) - mu_i(:,i);  
-        total = total + setcounter(5,i);
+        total = total + setcounter(1,i) + setcounter(5,i);
     end
 
     mu = mean(X_red,2);
@@ -122,5 +114,5 @@ function [accuracy] = LDA_Exp1_2(set1, set2, set3, set4, set5, setcounter, n, nu
             end
         end
     end
-    accuracy = accuracy./count;
+    accuracy = accuracy./total1;
 end
