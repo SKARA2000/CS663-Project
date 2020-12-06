@@ -11,6 +11,7 @@ n_crop = 52;
 tic;
 [acc_top30,acc_30] = Eigenfaces_method(path,m,n,num_persons,img_per_person,30,0);
 fprintf("Accuracy on full faces using top 30 eigen vectors = %0.3f %%",acc_top30*100);
+fprintf('\n');
 fprintf("Accuracy on full faces using top 30 eigen vectors(excluding first 3) = %0.3f %%",acc_30*100);
 toc;
 %% Eigenfaces accuracy using cropped faces on Yale database
